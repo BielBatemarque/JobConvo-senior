@@ -1,0 +1,50 @@
+import React, { useReducer } from "react";
+
+const initialState = {
+    token: localStorage.getItem('token') || '',
+    username: localStorage.getItem('username') || '',
+    tipo: localStorage.getItem('tipo') || '',
+};
+
+export const globalContext = React.createContext(initialState);
+
+export const AppContext = ({ children }) => {
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    return(
+        <globalContext.Provider value={{ state, dispatch }}>{children}</globalContext.Provider>
+    );
+};
+
+export const reducer = (state, action) => {
+    switch(action.type) {
+        case 'autentication':
+            // Salva o estado no localStorage
+            localStorage.setItem('token', action.payload);
+            localStorage.setItem('username', action.username);
+            localStorage.setItem('tipo', action.tipo);
+
+            return {
+                ...state,
+                token: action.payload,
+                username: action.username,
+                tipo: action.tipo
+            };
+
+        case 'logout':
+            // Remove o estado do localStorage ao deslogar
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('tipo');
+
+            return {
+                ...state,
+                token: '',
+                username: '',
+                tipo: '',
+            };
+
+        default:
+            return { ...state };
+    }
+};

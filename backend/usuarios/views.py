@@ -28,7 +28,9 @@ class UsuarioViewSets(viewsets.ModelViewSet):
                 token, created = Token.objects.get_or_create(user=usuario)
                 return Response({
                     "detail": "Login feito com sucesso",
-                    "token": token.key
+                    "token": token.key,
+                    "tipo": usuario.tipo_usuario,
+                    "username": usuario.username
                 }, status=status.HTTP_200_OK)
             else:
                 return Response({"detail": "Senha incorreta"}, status=status.HTTP_400_BAD_REQUEST)

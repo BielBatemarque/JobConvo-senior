@@ -1,16 +1,17 @@
 import React, { useContext, useState } from 'react';
 import { ColumForm, Container, ImageContainer, SemiContainerInputs, StyledButton, StyledImame } from "./styles";
-// import { globalContext } from '../../context/context';
-// import { useNavigate } from 'react-router-dom';
+import { globalContext } from '../../context/context';
+import { useNavigate } from 'react-router-dom';
 import { FailNotifications, SucssesNotifications } from '../../components/Notifications';
 import { FloatLabel } from '../../components/FloatLabel';
 import { Title } from '../../components/title/index';
-import { toast } from 'react-toastify';
 import logo2 from '../../assets/logo2.png';
 export const LoginScreen = () => {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const [login, setLogin] = useState({});
+    const { dispatch } = useContext(globalContext);
+
 
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -29,6 +30,14 @@ export const LoginScreen = () => {
 
         if (request.ok){
             SucssesNotifications(response.detail);
+            const { token, tipo, username } = response;
+            dispatch({type: 'autentication', payload: token, username: username, tipo: tipo});
+
+            if (tipo === 'candidato'){
+                navigate('/candidato/home');
+            } else if (tipo === 'empresa'){
+                navigate('/empresa/home');
+            }
         }else {
             FailNotifications(response.detail);
         }

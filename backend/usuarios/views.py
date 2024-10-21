@@ -12,7 +12,6 @@ class UsuarioViewSets(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
 
-
     @action(detail=False, methods=['post'], url_path='login', url_name='login')
     @permission_classes([AllowAny])
     def login(self, request):
@@ -25,7 +24,7 @@ class UsuarioViewSets(viewsets.ModelViewSet):
         try:
             usuario = Usuario.objects.get(username=username)
 
-            if usuario.check_password(password):  # Use o método check_password
+            if usuario.check_password(password):
                 # Gere o token de autenticação
                 token, created = Token.objects.get_or_create(user=usuario)
                 return Response({
@@ -39,21 +38,16 @@ class UsuarioViewSets(viewsets.ModelViewSet):
             return Response({"detail": "Usuário não encontrado"}, status=status.HTTP_400_BAD_REQUEST)
         
     @action(detail=False, methods=['post'], url_path='logout', url_name='logout')
-    @permission_classes([IsAuthenticated])  # Garante que apenas usuários autenticados possam fazer logout
+    @permission_classes([IsAuthenticated])
     def logout(self, request):
         try:
-            token = request.auth  # Obtém o token atual do request
+            token = request.auth
             if token:
                 token.delete()  # Remove o token do banco de dados
                 return Response({"detail": "Logout feito com sucesso"}, status=status.HTTP_200_OK)
             return Response({"detail": "Token não encontrado"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
-
-
 
 class VagaViewSets(viewsets.ModelViewSet):
     queryset = Vaga.objects.all()

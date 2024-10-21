@@ -5,7 +5,7 @@ export const Content = () => {
     return(
         <Routes>
         {/* Rotas Princípais*/}
-        <Route path='/' element={<LoginScreen />}  exact/>
-    </Routes>
+            <Route path='/' element={<LoginScreen />}  exact/>
+        </Routes>
     );
 }

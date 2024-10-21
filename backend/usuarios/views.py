@@ -25,7 +25,6 @@ class UsuarioViewSets(viewsets.ModelViewSet):
             usuario = Usuario.objects.get(username=username)
 
             if usuario.check_password(password):
-                # Gere o token de autenticação
                 token, created = Token.objects.get_or_create(user=usuario)
                 return Response({
                     "detail": "Login feito com sucesso",
@@ -43,7 +42,7 @@ class UsuarioViewSets(viewsets.ModelViewSet):
         try:
             token = request.auth
             if token:
-                token.delete()  # Remove o token do banco de dados
+                token.delete()
                 return Response({"detail": "Logout feito com sucesso"}, status=status.HTTP_200_OK)
             return Response({"detail": "Token não encontrado"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:

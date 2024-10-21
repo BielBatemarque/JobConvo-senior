@@ -1,21 +1,43 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.conf import settings
 
-# Create your models here.
-class Usuario(models.Model):
+class UsuarioManager(BaseUserManager):
+    def create_user(self, username, password=None, **extra_fields):
+        if not username:
+            raise ValueError('O campo de nome de usuário é obrigatório')
+        
+        usuario = self.model(username=username, **extra_fields)
+        usuario.set_password(password)  # Usa o método set_password para criar um hash seguro
+        usuario.save(using=self._db)
+        return usuario
+
+    def create_superuser(self, username, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        
+        return self.create_user(username, password, **extra_fields)
+
+class Usuario(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=100, unique=True)
-    senha = models.CharField(max_length=128)
     tipo_usuario = models.CharField(
         max_length=20,
-        choices = [
+        choices=[
             ('empresa', 'empresa'),
             ('candidato', 'candidato')
         ]
     )
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
 
-    def __str__(self) -> str:
+    objects = UsuarioManager()
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = []
+
+    def __str__(self):
         return self.username
-    
-
 class Vaga(models.Model):
     FAIXA_SALARIAL_OPCOES = [
         ('ate_1000', 'Até 1.000'),

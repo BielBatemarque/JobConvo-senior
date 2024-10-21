@@ -30,11 +30,11 @@ export const ColumForm = styled.form`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-        height: 80%; /* Definir a altura da tela inteira */
+    height: 80%;
 `;
 
 export const StyledButton = styled.button`
-    background-color: rgb(42, 42, 42);
+    background-color: rgb(37, 155, 129);
     height: 2.5rem;
     color: white;
     border: none;
@@ -47,7 +47,7 @@ export const StyledButton = styled.button`
     margin-top: 1rem;
 
     &:hover{
-        background-color: rgb(68, 68, 68);
+        background-color: rgb(31, 131, 109);
         transition: 0.5s;
     }
 `;

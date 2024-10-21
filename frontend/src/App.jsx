@@ -1,6 +1,8 @@
-import logo from './logo.svg';
 import { BrowserRouter } from 'react-router-dom';
 import { Content } from './components/content/index';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import './App.css';
 
 function App() {
@@ -8,6 +10,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Content />
+        <ToastContainer />
       </BrowserRouter>
     </div>
   );

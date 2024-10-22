@@ -58,6 +58,24 @@ export const StyledImame = styled.img`
     height: 100%;
 `;
 
+export const StyledLink = styled.div`
+    margin-top: 4rem;
+    text-align: center;
+    font-size: 0.9rem;
+
+    a {
+        color: rgb(37, 155, 129);  
+        text-decoration: none;
+        font-weight: bold;
+
+        &:hover {
+            text-decoration: underline;
+            cursor: pointer;
+            color: rgb(31, 131, 109);  
+        }
+    }
+`;
+
 export const InputStyled = styled.input`
     width: 25vw;
     height: 2rem;

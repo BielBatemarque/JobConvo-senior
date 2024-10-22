@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { ColumForm, Container, ImageContainer, SemiContainerInputs, StyledButton, StyledImame } from "./styles";
+import { ColumForm, Container, ImageContainer, SemiContainerInputs, StyledButton, StyledImame, StyledLink } from "./styles";
 import { globalContext } from '../../context/context';
 import { useNavigate } from 'react-router-dom';
 import { FailNotifications, SucssesNotifications } from '../../components/Notifications';
@@ -70,6 +70,15 @@ export const LoginScreen = () => {
                         <FloatLabel type="text" name="username" text="Nome de Usuário" onChange={handleChange}/>
                         <FloatLabel type='password' text="Senha" required name="password" onChange={handleChange}/>
                         <StyledButton type="submit">Entrar</StyledButton>
+
+                        {/* Texto e link para cadastro */}
+                        
+                        <StyledLink>
+                            <p>Não Possui conta ?</p>
+                            <a onClick={() => navigate('/cadastrarUsuario/')}>
+                                Registre-se
+                            </a>
+                        </StyledLink>
                     </ColumForm>
                 </SemiContainerInputs>
             </Container>

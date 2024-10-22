@@ -67,6 +67,7 @@ class Vaga(models.Model):
         choices=ESCOLARIDADE_OPCOES,
         default='medio'
     )
+    empresa = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.nome_vaga

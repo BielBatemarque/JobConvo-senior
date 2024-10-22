@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Usuario, Vaga
+from django.db import IntegrityError
 
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
@@ -7,14 +8,24 @@ class UsuarioSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'password', 'tipo_usuario', 'is_active', 'is_staff']
         extra_kwargs = {'password': {'write_only': True}}
 
+    def validate_username(self, value):
+        """Verifica a existência do nome de usuário."""
+        if Usuario.objects.filter(username=value).exists():
+            raise serializers.ValidationError("Este nome de usuário já está em uso. Por favor, escolha outro.")
+        return value
+
     def create(self, validated_data):
-        usuario = Usuario(
-            username=validated_data['username'],
-            tipo_usuario=validated_data['tipo_usuario']
-        )
-        usuario.set_password(validated_data['password'])
-        usuario.save()
-        return usuario
+        try:
+            usuario = Usuario(
+                username=validated_data['username'],
+                tipo_usuario=validated_data['tipo_usuario']
+            )
+            usuario.set_password(validated_data['password'])
+            usuario.save()
+            return usuario
+        except IntegrityError:
+            raise serializers.ValidationError({"username": "Este nome de usuário já está em uso. Por favor, escolha outro."})
+
 
 class VagaSerializer(serializers.ModelSerializer):
     class Meta:

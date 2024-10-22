@@ -4,7 +4,7 @@ import { Title } from '../../components/title';
 import { FundoPage, CardForm } from './styles';
 import { ColumForm, StyledButton, StyledLink } from '../login/styles';
 import { useNavigate } from 'react-router-dom';
-import { AtentionNotification } from '../../components/Notifications';
+import { AtentionNotification, FailNotifications, SucssesNotifications } from '../../components/Notifications';
 
 export const PaginaDeCadastroUsuario = () => {
     const [usuario, setUsuario] = useState({
@@ -46,6 +46,14 @@ export const PaginaDeCadastroUsuario = () => {
         });
 
         const response = await request.json();
+
+        if(request.ok){
+            SucssesNotifications('Usuário cadastrado com sucesso');
+            navegate('/');
+        }else {
+            FailNotifications('Já existe um usuário com este nome, favor escolha outro.');
+            return;
+        }
         
 
     };

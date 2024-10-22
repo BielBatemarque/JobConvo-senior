@@ -9,7 +9,7 @@ class UsuarioManager(BaseUserManager):
             raise ValueError('O campo de nome de usuário é obrigatório')
         
         usuario = self.model(username=username, **extra_fields)
-        usuario.set_password(password)  # Usa o método set_password para criar um hash seguro
+        usuario.set_password(password)
         usuario.save(using=self._db)
         return usuario
 

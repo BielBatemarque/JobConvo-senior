@@ -3,15 +3,19 @@ import { LoginScreen } from '../../pages/login';
 import { PaginaDoCandidato } from '../../pages/PaginaCandidato/index';
 import { PaginaDaEmpresa } from '../../pages/paginaEmpresa/index';
 import { PaginaDeCadastroUsuario } from '../../pages/CadastrarUsuario';
+import { ContentEmpresa } from './ContentEmpresa';
 
 export const Content = () => {
     return(
         <Routes>
-        {/* Rotas Princípais*/}
-            <Route path='/' element={<LoginScreen />}  exact/>
-            <Route path='/candidato/home' element={<PaginaDoCandidato />} />
-            <Route path='/empresa/home' element={<PaginaDaEmpresa />} />
-            <Route path='/cadastrarUsuario/' element={ <PaginaDeCadastroUsuario />} />
+            {/* Rotas Principais */}
+            <Route path="/" element={<LoginScreen />} exact />
+            <Route path="/candidato/home" element={<PaginaDoCandidato />} />
+            <Route path="/empresa/*" element={<PaginaDaEmpresa />}>
+                {/* Rotas internas da empresa */}
+                <Route path="*" element={<ContentEmpresa />} />
+            </Route>
+            <Route path="/cadastrarUsuario/" element={<PaginaDeCadastroUsuario />} />
         </Routes>
     );
 }

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { StyledModal, ModalContent, CloseButton } from './styles'; 
+import { FloatLabel } from "../FloatLabel";
+import { ActionButton, StyledSelect } from "../../pages/paginaEmpresa/styles";
 
 const EditModal = ({ isOpen, onClose, vaga, onSave }) => {
     const [editedVaga, setEditedVaga] = useState(vaga || {});
@@ -29,16 +31,17 @@ const EditModal = ({ isOpen, onClose, vaga, onSave }) => {
                 <h2>Editar Vaga</h2>
                 <div>
                     <label>Nome*</label>
-                    <input 
+                    <FloatLabel type='text' name='nome_vaga' value={editedVaga.nome_vaga} onChange={handleChange}/>
+                    {/* <input 
                         type="text" 
                         name="nome_vaga" 
                         value={editedVaga.nome_vaga} 
                         onChange={handleChange} 
-                    />
+                    /> */}
                 </div>
                 <div>
                     <label>Faixa Salarial*</label>
-                    <select 
+                    <StyledSelect 
                         name="faixa_salarial" 
                         value={editedVaga.faixa_salarial} 
                         onChange={handleChange}
@@ -47,11 +50,11 @@ const EditModal = ({ isOpen, onClose, vaga, onSave }) => {
                         <option value="1000_2000">De 1.000 a 2.000</option>
                         <option value="2000_3000">De 2.000 a 3.000</option>
                         <option value="acima_3000">Acima de 3.000</option>
-                    </select>
+                    </StyledSelect>
                 </div>
                 <div>
                     <label>Escolaridade Mínima*</label>
-                    <select 
+                    <StyledSelect 
                         name="escolaridade_minima" 
                         value={editedVaga.escolaridade_minima} 
                         onChange={handleChange}
@@ -62,18 +65,21 @@ const EditModal = ({ isOpen, onClose, vaga, onSave }) => {
                         <option value="superior">Ensino Superior</option>
                         <option value="pos">Pós / MBA / Mestrado</option>
                         <option value="doutorado">Doutorado</option>
-                    </select>
+                    </StyledSelect>
                 </div>
                 <div>
                     <label>Requisitos*</label>
-                    <input 
+                    {/* <input 
                         type="text" 
                         name="requisitos" 
                         value={editedVaga.requisitos} 
                         onChange={handleChange} 
-                    />
+                    /> */}
+
+                    <FloatLabel name="requisitos" type='text' value={editedVaga.requisitos} onChange={handleChange} />
                 </div>
-                <button onClick={handleSave}>Salvar</button>
+                <br />
+                <ActionButton onClick={handleSave}>Salvar</ActionButton>
             </ModalContent>
         </StyledModal>
     );

@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { StyledLink } from "./styles";
 
-export const NavItem = ({ text, redirecionamento }) => {
+export const NavItem = ({ text, redirecionamento, onClick }) => {
     const navigate = useNavigate();
 
     return (
-        <StyledLink onClick={() => navigate(redirecionamento || "#")}>{text}</StyledLink>
+        <StyledLink onClick={onClick || (() => navigate(redirecionamento || "#"))}>
+            {text}
+        </StyledLink>
     );
 }

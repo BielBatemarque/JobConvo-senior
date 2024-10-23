@@ -32,12 +32,6 @@ const EditModal = ({ isOpen, onClose, vaga, onSave }) => {
                 <div>
                     <label>Nome*</label>
                     <FloatLabel type='text' name='nome_vaga' value={editedVaga.nome_vaga} onChange={handleChange}/>
-                    {/* <input 
-                        type="text" 
-                        name="nome_vaga" 
-                        value={editedVaga.nome_vaga} 
-                        onChange={handleChange} 
-                    /> */}
                 </div>
                 <div>
                     <label>Faixa Salarial*</label>
@@ -69,12 +63,6 @@ const EditModal = ({ isOpen, onClose, vaga, onSave }) => {
                 </div>
                 <div>
                     <label>Requisitos*</label>
-                    {/* <input 
-                        type="text" 
-                        name="requisitos" 
-                        value={editedVaga.requisitos} 
-                        onChange={handleChange} 
-                    /> */}
 
                     <FloatLabel name="requisitos" type='text' value={editedVaga.requisitos} onChange={handleChange} />
                 </div>

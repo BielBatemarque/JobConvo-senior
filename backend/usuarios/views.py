@@ -30,7 +30,8 @@ class UsuarioViewSets(viewsets.ModelViewSet):
                     "detail": "Login feito com sucesso",
                     "token": token.key,
                     "tipo": usuario.tipo_usuario,
-                    "username": usuario.username
+                    "username": usuario.username,
+                    "usuario_id": usuario.id,
                 }, status=status.HTTP_200_OK)
             else:
                 return Response({"detail": "Senha incorreta"}, status=status.HTTP_400_BAD_REQUEST)
@@ -53,3 +54,19 @@ class UsuarioViewSets(viewsets.ModelViewSet):
 class VagaViewSets(viewsets.ModelViewSet):
     queryset = Vaga.objects.all()
     serializer_class = VagaSerializer
+
+    @action(detail=False, methods=['post'], url_path='retorna_vagas_empresa', url_name="retorna_vagas_empresa")
+    def retorna_vagas_empresa(self, request):
+        empresa_id = request.data.get("empresa_id")
+
+        if not empresa_id:
+            return Response({"detail": "ID da empresa não informado"}, status=status.HTTP_400_BAD_REQUEST)
+
+        vagas = Vaga.objects.filter(empresa_id=empresa_id)
+        
+        if vagas.exists():
+            serializer = VagaSerializer(vagas, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"detail": "Nenhuma vaga encontrada para essa empresa"}, status=status.HTTP_404_NOT_FOUND)
+        

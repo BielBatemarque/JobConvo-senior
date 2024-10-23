@@ -1,5 +1,18 @@
+import { NavBar } from "../../components/NavBar";
+import { NavItem } from "../../components/NavItem";
+import { Outlet } from 'react-router-dom';
+
 export const PaginaDoCandidato = () => {
     return (
-        <h1>Pagina do candidato</h1>
-    )
+        <>
+            <NavBar>
+                <NavItem text="Vagas"  redirecionamento='/candidato/vagasCandidato' />
+                <NavItem text="Minhas Aplicações" redirecionamento="/candidato/minhasAplicacoes"/>
+            </NavBar>
+
+            <div style={{ paddingTop: '20px' }}> 
+                <Outlet />
+            </div>
+        </>
+    );
 }

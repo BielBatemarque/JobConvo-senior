@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { FloatLabel } from "../../components/FloatLabel";
 import { Title } from "../../components/title";
 import { globalContext } from '../../context/context'
-import { ActionButton, FormHorizontal, FuncoTitle, FundoFormListagem, StyledButton, StyledSelect, Table } from './styles';
+import { ActionButton, FormHorizontal, FundoTitle, FundoFormListagem, StyledButton, StyledSelect, Table } from './styles';
 import { FailNotifications, SucssesNotifications} from '../../components/Notifications/index';
 import EditModal from '../../components/EditModal/index';
 
@@ -76,6 +76,18 @@ export const VagasPage = () => {
             FailNotifications("Falha ao editar vaga.");
         }
     };
+
+    const formatFaixaSalarial = (faixa) => {
+        if (faixa.startsWith('acima_')) {
+            const valor = faixa.split('_')[1];
+            return `Acima de R$ ${valor}`;
+        } else if (faixa.includes('_')) {
+            const [min, max] = faixa.split('_');
+            return `R$ ${min} - R$ ${max}`;
+        }
+        return faixa;
+    };
+    
     
     const handleDelete = async (id) => {
         const request = await fetch(`http://localhost:8000/vagas/${id}/`, {
@@ -94,7 +106,6 @@ export const VagasPage = () => {
         }
     };
 
-    // console.log(vaga);
 
     useEffect(() => {
         handleLoadVagas();
@@ -103,9 +114,9 @@ export const VagasPage = () => {
     return (
         <>
             <FundoFormListagem>
-                <FuncoTitle>
+                <FundoTitle>
                     <Title>Cadastrar Nova Vaga</Title>
-                </FuncoTitle>
+                </FundoTitle>
                 <FormHorizontal>
                     <div style={{ textAlign: 'start' }}>
                         <label htmlFor="nome_vaga">Nome*</label>
@@ -150,9 +161,9 @@ export const VagasPage = () => {
             <br />
 
             <FundoFormListagem>
-                <FuncoTitle>
+                <FundoTitle>
                     <Title>Listagem de Vagas</Title>
-                </FuncoTitle>
+                </FundoTitle>
                 <Table>
                     <thead>
                         <tr>
@@ -167,7 +178,7 @@ export const VagasPage = () => {
                         {vagas.length > 0 ? vagas.map((vaga, index) => (
                             <tr key={index}>
                                 <td>{vaga.nome_vaga}</td>
-                                <td>{vaga.faixa_salarial}</td>
+                                <td>{formatFaixaSalarial(vaga.faixa_salarial)}</td>
                                 <td>{vaga.requisitos}</td>
                                 <td>{vaga.escolaridade_minima}</td>
                                 <td>

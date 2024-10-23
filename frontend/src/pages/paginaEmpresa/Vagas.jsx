@@ -3,7 +3,8 @@ import { FloatLabel } from "../../components/FloatLabel";
 import { Title } from "../../components/title";
 import { globalContext } from '../../context/context'
 import { ActionButton, FormHorizontal, FuncoTitle, FundoFormListagem, StyledButton, StyledSelect, Table } from './styles';
-import EditModal from '../../components/EditModal/index'; // Importando a modal
+import { FailNotifications, SucssesNotifications} from '../../components/Notifications/index';
+import EditModal from '../../components/EditModal/index';
 
 export const VagasPage = () => {
     const [vaga, setVaga] = useState({});
@@ -11,7 +12,6 @@ export const VagasPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedVaga, setSelectedVaga] = useState(null);
     const { state } = useContext(globalContext);
-    console.log(state);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -19,7 +19,24 @@ export const VagasPage = () => {
     };
 
     const handleCadastraVaga = async () => {
-        // Implementar lógica para cadastrar vaga
+        const request = await fetch('http://localhost:8000/vagas/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({...vaga, empresa: state.usuario_id})
+        });
+        
+        
+        if (request.ok){
+            SucssesNotifications("Vaga cadastrada com sucesso.");
+            setVaga({});
+            
+            await handleLoadVagas();
+        } else {
+            FailNotifications('Erro ao cadastrar Vaga');
+        }
+        
     };
 
     const handleLoadVagas = async () => {
@@ -34,7 +51,6 @@ export const VagasPage = () => {
         });
         const response = await request.json();
         setVagas(response);
-        console.log(response);
     };
 
     const handleEdit = (vaga) => {
@@ -42,15 +58,43 @@ export const VagasPage = () => {
         setIsModalOpen(true);
     };
 
-    const handleSaveEdit = async (vaga) => {
-        // Implementar lógica para atualizar vaga no backend
+    const handleSaveEdit = async (vagaEditada) => {
         setIsModalOpen(false);
-        await handleLoadVagas(); // Recarregar vagas após a edição
+    
+        const request = await fetch(`http://localhost:8000/vagas/${vagaEditada.id}/`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(vagaEditada),
+        });
+    
+        if (request.ok) {
+            SucssesNotifications("Vaga editada com sucesso.");
+            await handleLoadVagas();
+        } else {
+            FailNotifications("Falha ao editar vaga.");
+        }
     };
     
     const handleDelete = async (id) => {
-        // Implementar lógica para excluir vaga
+        const request = await fetch(`http://localhost:8000/vagas/${id}/`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (request.ok){
+            SucssesNotifications("Vaga deletada com sucesso.");
+
+            await handleLoadVagas();
+        } else {
+            FailNotifications("Falha ao deletar vaga.");
+        }
     };
+
+    // console.log(vaga);
 
     useEffect(() => {
         handleLoadVagas();
@@ -99,7 +143,7 @@ export const VagasPage = () => {
 
                 </FormHorizontal>
 
-                <StyledButton style={{marginTop: '1rem'}} onClick={() => handleCadastraVaga(vaga)} >Salvar</StyledButton>
+                <StyledButton style={{marginTop: '1rem', fontSize: '1rem'}} onClick={() => handleCadastraVaga(vaga)} >Salvar</StyledButton>
             </FundoFormListagem>
 
             <br />
@@ -120,18 +164,18 @@ export const VagasPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {vagas.map((vaga, index) => (
+                        {vagas.length > 0 ? vagas.map((vaga, index) => (
                             <tr key={index}>
                                 <td>{vaga.nome_vaga}</td>
                                 <td>{vaga.faixa_salarial}</td>
                                 <td>{vaga.requisitos}</td>
                                 <td>{vaga.escolaridade_minima}</td>
                                 <td>
-                                    <button onClick={() => handleEdit(vaga)}>Editar</button>
-                                    <button onClick={() => handleDelete(vaga.id)}>Excluir</button>
+                                    <ActionButton onClick={() => handleEdit(vaga)}>Editar</ActionButton>
+                                    <ActionButton onClick={() => handleDelete(vaga.id)}>Excluir</ActionButton>
                                 </td>
                             </tr>
-                        ))}
+                        )): null}
                     </tbody>
                 </Table>
             </FundoFormListagem>

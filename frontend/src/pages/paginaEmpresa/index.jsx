@@ -11,9 +11,7 @@ export const PaginaDaEmpresa = () => {
                 <NavItem text="Gráficos" redirecionamento={'/empresa/graficos'} />
             </NavBar>
 
-            {/* O conteúdo será renderizado aqui, abaixo da NavBar */}
-
-            <div style={{ paddingTop: '80px' }}> {/* Espaço para que o conteúdo fique abaixo da NavBar */}
+            <div style={{ paddingTop: '20px' }}> 
                 <Outlet />
             </div>
         </>

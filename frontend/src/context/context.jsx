@@ -4,6 +4,7 @@ const initialState = {
     token: localStorage.getItem('token') || '',
     username: localStorage.getItem('username') || '',
     tipo: localStorage.getItem('tipo') || '',
+    usuario_id: localStorage.getItem('usuario_id') || '',
 };
 
 export const globalContext = React.createContext(initialState);
@@ -23,6 +24,7 @@ export const reducer = (state, action) => {
             localStorage.setItem('token', action.payload);
             localStorage.setItem('username', action.username);
             localStorage.setItem('tipo', action.tipo);
+            localStorage.setItem('usuario_id', action.usuario_id)
 
             return {
                 ...state,

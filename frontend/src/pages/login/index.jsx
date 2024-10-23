@@ -30,8 +30,8 @@ export const LoginScreen = () => {
 
         if (request.ok){
             SucssesNotifications(response.detail);
-            const { token, tipo, username } = response;
-            dispatch({type: 'autentication', payload: token, username: username, tipo: tipo});
+            const { token, tipo, username, usuario_id } = response;
+            dispatch({type: 'autentication', payload: token, username: username, tipo: tipo, usuario_id:usuario_id});
 
             if (tipo === 'candidato'){
                 navigate('/candidato/home');

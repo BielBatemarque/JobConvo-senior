@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const FuncoTitle = styled.div`
+export const FundoTitle = styled.div`
     width: 100%;
     background-color: #04c49c;
     margin: 0 auto;

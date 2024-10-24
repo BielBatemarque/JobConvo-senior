@@ -100,3 +100,29 @@ class AplicacoesVagaViewSet(viewsets.ModelViewSet):
         )
 
         return Response({"detail": "Aplicação realizada com sucesso."}, status=status.HTTP_201_CREATED)
+
+
+    @action(detail=False, methods=['get'], url_path='retorna_aplicacoes_candidato', url_name="retorna_aplicacoes_candidato")
+    def retorna_aplicacoes_candidato(self, request):
+        usuario_id = request.query_params.get('usuario_id')
+        
+        try:
+            usuario = Usuario.objects.get(id=usuario_id)
+        except Usuario.DoesNotExist:
+            return Response({"detail": "Candidato não encontrado"}, status=status.HTTP_404_NOT_FOUND)
+        
+        vagas_candidatadas = self.queryset.filter(candidato=usuario)
+
+        vagas_detalhadas = []
+
+        for aplicacao in vagas_candidatadas:
+            vaga = aplicacao.vaga
+
+            vagas_detalhadas.append({
+                "nome_vaga": vaga.nome_vaga,
+                "empresa": vaga.empresa.username,
+                "escolaridade_informada": aplicacao.candidato_escolaridade,
+                "pretensao_salarial_informada": aplicacao.pretensao_salarial,
+            })
+
+        return Response(vagas_detalhadas, status=status.HTTP_200_OK)

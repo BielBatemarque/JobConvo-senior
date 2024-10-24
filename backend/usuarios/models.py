@@ -68,6 +68,7 @@ class Vaga(models.Model):
         default='medio'
     )
     empresa = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=True)
+    data_criacao = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return self.nome_vaga

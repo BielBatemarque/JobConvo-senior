@@ -1,6 +1,10 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action,permission_classes
 from rest_framework.permissions import AllowAny
+from django.db.models import Count
+from django.utils import timezone
+from collections import defaultdict
+from django.db.models.functions import TruncMonth
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Usuario, Vaga, AplicacoesVaga
@@ -71,6 +75,24 @@ class VagaViewSets(viewsets.ModelViewSet):
         else:
             return Response({"detail": "Nenhuma vaga encontrada para essa empresa"}, status=status.HTTP_404_NOT_FOUND)
         
+
+    @action(detail=False, methods=['get'], url_path='vagas_por_mes', url_name='vagas_por_mes')
+    def vagas_por_mes(self, request):
+        empresa_id = request.query_params.get('empresa_id')
+        usuario_empresa = Usuario.objects.get(id=empresa_id)
+
+        now = timezone.now()
+        current_month = now.month
+        current_year = now.year
+
+        meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+                 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+
+        vagas_empresa = self.queryset.filter(empresa=usuario_empresa, data_criacao__month=current_month, data_criacao__year=current_year)
+
+        vagas_no_mes_atual = vagas_empresa.count()
+
+        return Response({'mes': meses[current_month - 1], 'vagas_por_mes': vagas_no_mes_atual}, status=status.HTTP_200_OK)
 
 class AplicacoesVagaViewSet(viewsets.ModelViewSet):
     queryset = AplicacoesVaga.objects.all()
@@ -183,3 +205,22 @@ class AplicacoesVagaViewSet(viewsets.ModelViewSet):
             })
 
         return Response(vagas_com_aplicacoes, status=status.HTTP_200_OK)
+    
+    @action(detail=False, methods=['get'], url_path='candidatos_por_mes', url_name='candidatos_por_mes')
+    def candidatos_por_mes(self, request):
+        empresa_id = request.query_params.get('empresa_id')
+        usuario_empresa = Usuario.objects.get(id=empresa_id)
+        now = timezone.now()
+        current_year = now.year
+
+        meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+
+        candidaturas_por_mes = {mes: 0 for mes in meses}
+
+        aplicacoes_da_empresa = self.queryset.filter(vaga__empresa=usuario_empresa)
+
+        for mes in range(1, 13):
+            candidaturas_por_mes[meses[mes - 1]] = aplicacoes_da_empresa.filter(data_aplicacao__month=mes, data_aplicacao__year=current_year).count()
+
+        return Response(candidaturas_por_mes, status=status.HTTP_200_OK)
+        

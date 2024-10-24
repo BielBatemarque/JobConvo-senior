@@ -9,7 +9,6 @@ class UsuarioSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate_username(self, value):
-        """Verifica a existência do nome de usuário."""
         if Usuario.objects.filter(username=value).exists():
             raise serializers.ValidationError("Este nome de usuário já está em uso. Por favor, escolha outro.")
         return value

@@ -20,7 +20,6 @@ export const AppContext = ({ children }) => {
 export const reducer = (state, action) => {
     switch(action.type) {
         case 'autentication':
-            // Salva o estado no localStorage
             localStorage.setItem('token', action.payload);
             localStorage.setItem('username', action.username);
             localStorage.setItem('tipo', action.tipo);
@@ -34,7 +33,6 @@ export const reducer = (state, action) => {
             };
 
         case 'logout':
-            // Remove o estado do localStorage ao deslogar
             localStorage.removeItem('token');
             localStorage.removeItem('username');
             localStorage.removeItem('tipo');

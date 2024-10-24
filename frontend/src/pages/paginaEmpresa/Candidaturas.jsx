@@ -30,8 +30,20 @@ export const Candidaturas = () => {
         if (pontuacao === 0) return "Fora do Perfil da vaga";
         if (pontuacao === 1) return "Bom Candidato";
         if (pontuacao === 2) return "Perfil da vaga";
-        return ""; // Caso de pontuação inesperada
+        return "";
     };
+
+    const formatarSalario = (valor) => {
+        if (valor !== null && valor !== undefined) {
+            const numero = parseFloat(valor);
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+            }).format(numero);
+        }
+        return 'R$ 0,00';
+    };
+
 
     return (
         <>
@@ -56,7 +68,7 @@ export const Candidaturas = () => {
                                     <tr key={aplicacao.aplicacao_id}>
                                         <td>{aplicacao.candidato}</td>
                                         <td>{aplicacao.candidato_escolaridade}</td>
-                                        <td>{aplicacao.pretensao_salarial_informada}</td>
+                                        <td>{formatarSalario(aplicacao.pretensao_salarial_informada)}</td>
                                         <td>{new Date(aplicacao.data_aplicacao).toLocaleDateString()}</td>
                                         <td>
                                             <Pontuacao 

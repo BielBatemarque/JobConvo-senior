@@ -44,6 +44,17 @@ export const MinhasAplicacoes = () => {
         }
     }
 
+    const formatarSalario = (valor) => {
+        if (valor !== null && valor !== undefined) {
+            const numero = parseFloat(valor);
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+            }).format(numero);
+        }
+        return 'R$ 0,00';
+    };
+
     return (
         <>
             <FundoFormListagem>
@@ -67,7 +78,7 @@ export const MinhasAplicacoes = () => {
                                     <td>{aplicacao.nome_vaga}</td>
                                     <td>{aplicacao.empresa}</td>
                                     <td>{aplicacao.escolaridade_informada}</td>
-                                    <td>{aplicacao.pretensao_salarial_informada}</td>
+                                    <td>{formatarSalario(aplicacao.pretensao_salarial_informada)}</td>
                                     <td><RedActionButton onClick={() => handleDesistirAplicacao(aplicacao.apicacao_id)}>Desistir</RedActionButton></td>
                                 </tr>
                             ))

@@ -34,9 +34,9 @@ export const LoginScreen = () => {
             dispatch({type: 'autentication', payload: token, username: username, tipo: tipo, usuario_id:usuario_id});
 
             if (tipo === 'candidato'){
-                navigate('/candidato/home');
+                navigate('/candidato/vagasCandidato');
             } else if (tipo === 'empresa'){
-                navigate('/empresa/home');
+                navigate('/empresa/vagas');
             }
         }else {
             FailNotifications(response.detail);

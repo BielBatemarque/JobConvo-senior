@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Title } from "../../components/title";
 import { globalContext } from "../../context/context";
-import { FundoFormListagem, FundoTitle, Table } from "./styles";
+import { FundoFormListagem, FundoTitle, Table, Pontuacao } from "./styles";
 
 export const Candidaturas = () => {
     const [aplicacoes, setAplicacoes] = useState([]);
@@ -26,9 +26,16 @@ export const Candidaturas = () => {
         handleLoadAplicacoes();
     }, []);
 
+    const getHint = (pontuacao) => {
+        if (pontuacao === 0) return "Fora do Perfil da vaga";
+        if (pontuacao === 1) return "Bom Candidato";
+        if (pontuacao === 2) return "Perfil da vaga";
+        return ""; // Caso de pontuação inesperada
+    };
+
     return (
         <>
-        {Object.keys(aplicacoes).length > 0 ? (
+            {Object.keys(aplicacoes).length > 0 ? (
                 Object.keys(aplicacoes).map((vaga, index) => (
                     <FundoFormListagem key={index}>
                         <FundoTitle>
@@ -41,7 +48,7 @@ export const Candidaturas = () => {
                                     <th>Escolaridade informada</th>
                                     <th>Pretensão salarial informada</th>
                                     <th>Data de aplicação</th>
-                                    <th>Perfil</th>
+                                    <th>Pontuação</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -52,7 +59,12 @@ export const Candidaturas = () => {
                                         <td>{aplicacao.pretensao_salarial_informada}</td>
                                         <td>{new Date(aplicacao.data_aplicacao).toLocaleDateString()}</td>
                                         <td>
-                                            {aplicacao.pontuacao}
+                                            <Pontuacao 
+                                                pontuacao={aplicacao.pontuacao} 
+                                                title={getHint(aplicacao.pontuacao)}
+                                            >
+                                                {aplicacao.pontuacao} pontos
+                                            </Pontuacao>
                                         </td>
                                     </tr>
                                 ))}
@@ -61,9 +73,9 @@ export const Candidaturas = () => {
                     </FundoFormListagem>
                 ))
             ) : (
-               null
+                <p>Nenhuma aplicação encontrada.</p>
             )}
-
         </>
+
     );
 };

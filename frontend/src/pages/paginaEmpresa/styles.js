@@ -96,3 +96,13 @@ export const RedActionButton = styled(ActionButton)`
         background-color: #c0392b;
     }
 `;
+
+export const Pontuacao = styled.span`
+    cursor: pointer;
+    color: ${(props) => {
+        if (props.pontuacao === 0) return "red";
+        if (props.pontuacao === 1) return "blue";
+        if (props.pontuacao === 2) return "green";
+        return "black";
+    }};
+`;

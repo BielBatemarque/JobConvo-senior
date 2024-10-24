@@ -21,12 +21,12 @@ from usuarios.views import UsuarioViewSets, VagaViewSets, AplicacoesVagaViewSet
 from rest_framework.authtoken.views import obtain_auth_token
 
 router = DefaultRouter()
-router.register(r"usuarios", UsuarioViewSets)
-router.register(r"vagas", VagaViewSets)
-router.register(r"aplicacoes", AplicacoesVagaViewSet)
+router.register(r"usuarios", UsuarioViewSets, basename='usuarios')
+router.register(r"vagas", VagaViewSets, basename='vagas')
+router.register(r"aplicacoes", AplicacoesVagaViewSet, basename='aplicacoes')
 
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    path('api-token-auth/', obtain_auth_token, name='api_token_auth')
 ]

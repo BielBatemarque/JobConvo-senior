@@ -13,18 +13,21 @@ export const VagasPage = () => {
     const [selectedVaga, setSelectedVaga] = useState(null);
     const { state } = useContext(globalContext);
 
+    console.log(state);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setVaga({...vaga, [name]: value });
     };
 
     const handleCadastraVaga = async () => {
+        console.log(state.usuario_id);
         const request = await fetch('http://localhost:8000/vagas/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({...vaga, empresa: state.usuario_id})
+            body: JSON.stringify({...vaga, empresa: localStorage.getItem('usuario_id')})
         });
         
         
@@ -46,7 +49,7 @@ export const VagasPage = () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                'empresa_id': state.usuario_id,
+                'empresa_id': localStorage.getItem('usuario_id'),
             })
         });
         const response = await request.json();

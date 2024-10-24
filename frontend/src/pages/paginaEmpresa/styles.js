@@ -88,3 +88,11 @@ export const ActionButton = styled.button`
         margin-left: 5px; 
     }
 `;
+
+export const RedActionButton = styled(ActionButton)`
+    background-color: #e74c3c; 
+    
+    &:hover {
+        background-color: #c0392b;
+    }
+`;

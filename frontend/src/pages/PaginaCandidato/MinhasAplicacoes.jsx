@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { Title } from "../../components/title";
-import { FundoFormListagem, FundoTitle, Table } from "../paginaEmpresa/styles";
+import { FundoFormListagem, FundoTitle, RedActionButton, Table } from "../paginaEmpresa/styles";
 import { globalContext } from "../../context/context";
 
 export const MinhasAplicacoes = () => {
@@ -8,7 +8,7 @@ export const MinhasAplicacoes = () => {
     const { state } = useContext(globalContext);
 
     const handleLoadAplicacoes = async () => {
-        const request = await fetch(`http://localhost:8000/aplicacoes/retorna_aplicacoes_candidato?usuario_id=${state.usuario_id}`, {
+        const request = await fetch(`http://localhost:8000/aplicacoes/retorna_aplicacoes_candidato?usuario_id=${localStorage.getItem('usuario_id')}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -42,6 +42,19 @@ export const MinhasAplicacoes = () => {
                             <th>Ações</th>
                         </tr>
                     </thead>
+                    <tbody>
+                        {aplicacoes.length > 0 ? 
+                            aplicacoes.map((aplicacao, index) => (
+                                <tr key={index}>
+                                    <td>{aplicacao.nome_vaga}</td>
+                                    <td>{aplicacao.empresa}</td>
+                                    <td>{aplicacao.escolaridade_informada}</td>
+                                    <td>{aplicacao.pretensao_salarial_informada}</td>
+                                    <td><RedActionButton>Desistir</RedActionButton></td>
+                                </tr>
+                            ))
+                        : null}
+                    </tbody>
                 </Table>
             </FundoFormListagem>
         </>

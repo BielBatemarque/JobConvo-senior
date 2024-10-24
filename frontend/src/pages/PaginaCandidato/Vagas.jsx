@@ -40,7 +40,7 @@ export const CandidatoVagas = () => {
                 'Authorization': `Token ${state.token}`
             },
             body: JSON.stringify({
-                usuario: state.usuario_id,
+                usuario: localStorage.getItem('usuario_id'),
                 vaga: aplicacao.vagaId,
                 pretensao_salarial: aplicacao.pretensao_salarial,
                 candidato_escolaridade: aplicacao.candidato_escolaridade,
@@ -51,7 +51,7 @@ export const CandidatoVagas = () => {
     
         if (request.ok) {
             SucssesNotifications('Aplicação enviada com sucesso!');
-        } else if (request.status == 400){
+        } else if (request.status === 400){
             AtentionNotification(response.detail);
         } else {
             FailNotifications('Erro ao enviar aplicação.');

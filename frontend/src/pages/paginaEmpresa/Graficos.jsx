@@ -4,7 +4,6 @@ import { Bar } from 'react-chartjs-2';
 import { Chart, CategoryScale, LinearScale, BarElement, Title as ChartTitle, Tooltip, Legend } from 'chart.js';
 import { globalContext } from "../../context/context";
 
-// Registrar componentes do Chart.js para que funcionem no React
 Chart.register(CategoryScale, LinearScale, BarElement, ChartTitle, Tooltip, Legend);
 
 export const GraficosPage = () => {
@@ -12,7 +11,6 @@ export const GraficosPage = () => {
     const [vagasPorMes, setVagasPorMes] = useState([]);
     const [candidatosPorMes, setCandidatosPorMes] = useState([]);
 
-    // Função para buscar os dados de Vagas Criadas por Mês
     const handleLoadVagasPorMes = async () => {
         const request = await fetch(`http://localhost:8000/vagas/vagas_por_mes?empresa_id=${localStorage.getItem('usuario_id')}`, {
             method: 'GET',
@@ -31,7 +29,6 @@ export const GraficosPage = () => {
         setVagasPorMes(vagasPorMesArray);
     };
 
-    // Função para buscar os dados de Candidatos Recebidos por Mês
     const handleLoadCandidatosMes = async () => {
         const request = await fetch(`http://localhost:8000/aplicacoes/candidatos_por_mes?empresa_id=${localStorage.getItem('usuario_id')}`, {
             method: 'GET',
@@ -90,12 +87,15 @@ export const GraficosPage = () => {
 
     return (
         <div>
-            <div style={{ width: '80%', margin: '0 auto', marginTop: '2rem' }}>
-                <h3>Vagas Criadas por Mês</h3>
-                <Bar data={vagasCriadasData} options={options} />
-
-                <h3 style={{ marginTop: '3rem' }}>Candidatos Recebidos por Mês</h3>
-                <Bar data={candidatosRecebidosData} options={options} />
+            <div style={{ width: '80%', margin: '0 auto', marginTop: '2rem', display: 'flex', justifyContent: 'space-between' }}>
+                <div style={{ width: '49%' }}>
+                    <h3>Vagas Criadas por Mês</h3>
+                    <Bar data={vagasCriadasData} options={options} />
+                </div>
+                <div style={{ width: '49%' }}>
+                    <h3>Candidatos Recebidos por Mês</h3>
+                    <Bar data={candidatosRecebidosData} options={options} />
+                </div>
             </div>
         </div>
     );

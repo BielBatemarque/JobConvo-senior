@@ -1,11 +1,12 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action,permission_classes
 from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import Usuario, Vaga
+from .models import Usuario, Vaga, AplicacoesVaga
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
-from usuarios.serializers import UsuarioSerializer, VagaSerializer
+from usuarios.serializers import UsuarioSerializer, VagaSerializer, AplicacoesVagaSerializer
 # Create your views here.
 
 class UsuarioViewSets(viewsets.ModelViewSet):
@@ -70,3 +71,31 @@ class VagaViewSets(viewsets.ModelViewSet):
         else:
             return Response({"detail": "Nenhuma vaga encontrada para essa empresa"}, status=status.HTTP_404_NOT_FOUND)
         
+
+class AplicacoesVagaViewSet(viewsets.ModelViewSet):
+    queryset = AplicacoesVaga.objects.all()
+    serializer_class = AplicacoesVagaSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        candidato = request.data.get('usuario')
+        vaga_id = request.data.get('vaga')
+        pretensao_salarial = request.data.get('pretensao_salarial')
+        candidato_escolaridade = request.data.get('candidato_escolaridade')
+
+        try:
+            vaga = Vaga.objects.get(id=vaga_id)
+        except Vaga.DoesNotExist:
+            return Response({"detail": "Vaga não encontrada"}, status=status.HTTP_404_NOT_FOUND)
+
+        if AplicacoesVaga.objects.filter(vaga=vaga, candidato=candidato).exists():
+            return Response({"detail": "Você já aplicou para esta vaga."}, status=status.HTTP_400_BAD_REQUEST)
+
+        aplicacao_vaga = AplicacoesVaga.objects.create(
+            vaga=vaga,
+            candidato=candidato,
+            pretensao_salarial=pretensao_salarial,
+            candidato_escolaridade=candidato_escolaridade
+        )
+
+        return Response({"detail": "Aplicação realizada com sucesso."}, status=status.HTTP_201_CREATED)

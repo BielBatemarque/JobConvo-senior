@@ -1,9 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Title } from "../../components/title";
 import { ActionButton, FundoFormListagem, FundoTitle, Table } from "../paginaEmpresa/styles";
+import { globalContext } from "../../context/context";
+import AplicarVagaModal from "../../components/EditModal/AplicarVagaModel";
+import { SucssesNotifications, FailNotifications } from "../../components/Notifications";
 
 export const CandidatoVagas = () => {
     const [vagas, setVagas] = useState([]);
+    const { state } = useContext(globalContext);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [selectedVagaId, setSelectedVagaId] = useState(null);
 
     useEffect(() => {
         handleLoadVagas();
@@ -12,13 +18,40 @@ export const CandidatoVagas = () => {
     const handleLoadVagas = async () => {
         const request = await fetch('http://localhost:8000/vagas/');
         const response = await request.json();
-
         setVagas(response);
-    }
+    };
 
-    const handleAplicarVaga = async () => {
+    const openModal = (vagaId) => {
+        console.log("Abrindo modal para vaga: ", vagaId);
+        setSelectedVagaId(vagaId);
+        setModalIsOpen(true);
+    };
 
-    }
+    const closeModal = () => {
+        setModalIsOpen(false);
+        setSelectedVagaId(null);
+    };
+
+    const handleAplicar = async (aplicacao) => {
+        const request = await fetch('http://localhost:8000/aplicacoes/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${state.token}`
+            },
+            body: JSON.stringify({
+                vaga: aplicacao.vagaId,
+                pretensao_salarial: aplicacao.pretensao_salarial,
+                candidato_escolaridade: aplicacao.candidato_escolaridade,
+            }),
+        });
+    
+        if (request.ok) {
+            SucssesNotifications('Aplicação enviada com sucesso!');
+        } else {
+            FailNotifications('Erro ao enviar aplicação.');
+        }
+    };
 
     const formatFaixaSalarial = (faixa) => {
         if (faixa.startsWith('acima_')) {
@@ -48,7 +81,7 @@ export const CandidatoVagas = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        { vagas.length > 0 ?
+                        {vagas.length > 0 ?
                             vagas.map((vaga, index) => (
                                 <tr key={index}>
                                     <td>{vaga.nome_vaga}</td>
@@ -56,14 +89,22 @@ export const CandidatoVagas = () => {
                                     <td>{vaga.requisitos}</td>
                                     <td>{vaga.escolaridade_minima}</td>
                                     <td>
-                                        <ActionButton onClick={() => handleAplicarVaga()} >Aplicar</ActionButton>
+                                        <ActionButton onClick={() => openModal(vaga.id)}>Aplicar</ActionButton>
                                     </td>
                                 </tr>
                             ))
-                        :null}
+                        : null}
                     </tbody>
                 </Table>
             </FundoFormListagem>
+
+            {/* AplicarVagaModal */}
+            <AplicarVagaModal
+                isOpen={modalIsOpen}
+                onClose={closeModal}
+                vagaId={selectedVagaId}
+                onAplicar={handleAplicar}
+            />
         </>
     );
-}
+};

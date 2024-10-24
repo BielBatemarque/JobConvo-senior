@@ -31,8 +31,9 @@ export const FormHorizontal = styled.form`
 
 export const StyledSelect = styled.select`
     border-radius: 5px;
-    width: 22rem;
+    width: ${(props) => (props.size ? props.size : '22rem')};
     height: 3.2rem;
+    background-color: white;
 `;
 
 export const StyledButton = styled.button`

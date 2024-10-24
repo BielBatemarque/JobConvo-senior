@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Usuario, Vaga
+from .models import Usuario, Vaga, AplicacoesVaga
 from django.db import IntegrityError
 
 class UsuarioSerializer(serializers.ModelSerializer):
@@ -31,3 +31,10 @@ class VagaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vaga
         fields = "__all__"
+
+
+class AplicacoesVagaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AplicacoesVaga
+        fields = ['vaga', 'candidato', 'data_aplicacao', 'candidato_escolaridade', 'pretensao_salarial']
+        depth = 1

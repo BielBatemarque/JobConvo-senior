@@ -71,3 +71,26 @@ class Vaga(models.Model):
 
     def __str__(self):
         return self.nome_vaga
+
+
+class AplicacoesVaga(models.Model):
+    vaga = models.ForeignKey(Vaga, on_delete=models.CASCADE, related_name='aplicacoes')
+    candidato = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='minhas_aplicacoes', null=True)
+    data_aplicacao = models.DateTimeField(auto_now_add=True)
+
+    ESCOLARIDADE_OPCOES = [
+        ('fundamental', 'Ensino Fundamental'),
+        ('medio', 'Ensino Médio'),
+        ('tecnologo', 'Tecnólogo'),
+        ('superior', 'Ensino Superior'),
+        ('pos', 'Pós / MBA / Mestrado'),
+        ('doutorado', 'Doutorado'),
+    ]
+
+    pretensao_salarial = models.FloatField(null=True)
+
+    candidato_escolaridade = models.CharField(
+        max_length=15,
+        choices=ESCOLARIDADE_OPCOES,
+        default='medio'
+    )

@@ -3,7 +3,7 @@ import { Title } from "../../components/title";
 import { ActionButton, FundoFormListagem, FundoTitle, Table } from "../paginaEmpresa/styles";
 import { globalContext } from "../../context/context";
 import AplicarVagaModal from "../../components/EditModal/AplicarVagaModel";
-import { SucssesNotifications, FailNotifications } from "../../components/Notifications";
+import { SucssesNotifications, FailNotifications, AtentionNotification } from "../../components/Notifications";
 
 export const CandidatoVagas = () => {
     const [vagas, setVagas] = useState([]);
@@ -40,14 +40,19 @@ export const CandidatoVagas = () => {
                 'Authorization': `Token ${state.token}`
             },
             body: JSON.stringify({
+                usuario: state.usuario_id,
                 vaga: aplicacao.vagaId,
                 pretensao_salarial: aplicacao.pretensao_salarial,
                 candidato_escolaridade: aplicacao.candidato_escolaridade,
             }),
         });
+
+        const response = await request.json();
     
         if (request.ok) {
             SucssesNotifications('Aplicação enviada com sucesso!');
+        } else if (request.status == 400){
+            AtentionNotification(response.detail);
         } else {
             FailNotifications('Erro ao enviar aplicação.');
         }

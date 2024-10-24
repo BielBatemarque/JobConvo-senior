@@ -78,13 +78,14 @@ class AplicacoesVagaViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
-        candidato = request.data.get('usuario')
+        candidato_id = request.data.get('usuario')
         vaga_id = request.data.get('vaga')
         pretensao_salarial = request.data.get('pretensao_salarial')
         candidato_escolaridade = request.data.get('candidato_escolaridade')
 
         try:
             vaga = Vaga.objects.get(id=vaga_id)
+            candidato = Usuario.objects.get(id=candidato_id)
         except Vaga.DoesNotExist:
             return Response({"detail": "Vaga não encontrada"}, status=status.HTTP_404_NOT_FOUND)
 

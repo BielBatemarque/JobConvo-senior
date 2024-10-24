@@ -119,6 +119,7 @@ class AplicacoesVagaViewSet(viewsets.ModelViewSet):
             vaga = aplicacao.vaga
 
             vagas_detalhadas.append({
+                "apicacao_id": aplicacao.id,
                 "nome_vaga": vaga.nome_vaga,
                 "empresa": vaga.empresa.username,
                 "escolaridade_informada": aplicacao.candidato_escolaridade,

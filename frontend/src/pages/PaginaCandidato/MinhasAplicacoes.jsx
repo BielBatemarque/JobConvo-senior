@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Title } from "../../components/title";
 import { FundoFormListagem, FundoTitle, RedActionButton, Table } from "../paginaEmpresa/styles";
 import { globalContext } from "../../context/context";
+import { FailNotifications, SucssesNotifications } from "../../components/Notifications";
 
 export const MinhasAplicacoes = () => {
     const [aplicacoes, setAplicacoes] = useState([]);
@@ -25,6 +26,23 @@ export const MinhasAplicacoes = () => {
     useEffect(() => {
         handleLoadAplicacoes();
     }, []);
+
+    const handleDesistirAplicacao = async (id) => {
+        const request = await fetch(`http://localhost:8000/aplicacoes/${id}/`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${state.token}`,
+            }
+        });   
+        if(request.ok){
+            SucssesNotifications("Desistiu da Vaga");
+
+            await handleLoadAplicacoes();
+        } else {
+            FailNotifications('Erro ao tentar desistir');
+        }
+    }
 
     return (
         <>
@@ -50,7 +68,7 @@ export const MinhasAplicacoes = () => {
                                     <td>{aplicacao.empresa}</td>
                                     <td>{aplicacao.escolaridade_informada}</td>
                                     <td>{aplicacao.pretensao_salarial_informada}</td>
-                                    <td><RedActionButton>Desistir</RedActionButton></td>
+                                    <td><RedActionButton onClick={() => handleDesistirAplicacao(aplicacao.apicacao_id)}>Desistir</RedActionButton></td>
                                 </tr>
                             ))
                         : null}

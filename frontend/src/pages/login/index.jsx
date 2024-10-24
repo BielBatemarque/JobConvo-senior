@@ -62,7 +62,7 @@ export const LoginScreen = () => {
                         width: '100%',
                         textAlign: 'center',
                     }}>
-                        <Title>Python App</Title>
+                        <Title>Apllython</Title>
                     </div>
 
                     <ColumForm method='POST' onSubmit={handleLogin}>
@@ -71,7 +71,6 @@ export const LoginScreen = () => {
                         <FloatLabel type='password' text="Senha" required name="password" onChange={handleChange}/>
                         <StyledButton type="submit">Entrar</StyledButton>
 
-                        {/* Texto e link para cadastro */}
                         
                         <StyledLink>
                             <p>Não Possui conta ?</p>

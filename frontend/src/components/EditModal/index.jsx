@@ -35,7 +35,8 @@ const EditModal = ({ isOpen, onClose, vaga, onSave }) => {
                 </div>
                 <div>
                     <label>Faixa Salarial*</label>
-                    <StyledSelect 
+                    <StyledSelect
+                        size={'24rem'} 
                         name="faixa_salarial" 
                         value={editedVaga.faixa_salarial} 
                         onChange={handleChange}
@@ -49,6 +50,7 @@ const EditModal = ({ isOpen, onClose, vaga, onSave }) => {
                 <div>
                     <label>Escolaridade Mínima*</label>
                     <StyledSelect 
+                        size={'24rem'} 
                         name="escolaridade_minima" 
                         value={editedVaga.escolaridade_minima} 
                         onChange={handleChange}

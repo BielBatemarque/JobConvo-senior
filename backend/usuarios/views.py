@@ -127,3 +127,59 @@ class AplicacoesVagaViewSet(viewsets.ModelViewSet):
             })
 
         return Response(vagas_detalhadas, status=status.HTTP_200_OK)
+    
+    def calcular_pontuacao(self, vaga, aplicacao):
+        pontuacao = 0
+
+        faixa_salarial = vaga.faixa_salarial
+        pretensao_salarial = aplicacao.pretensao_salarial
+        
+        if faixa_salarial == 'ate_1000' and pretensao_salarial <= 1000:
+            pontuacao += 1
+        elif faixa_salarial == '1000_2000' and 1000 < pretensao_salarial <= 2000:
+            pontuacao += 1
+        elif faixa_salarial == '2000_3000' and 2000 < pretensao_salarial <= 3000:
+            pontuacao += 1
+        elif faixa_salarial == 'acima_3000' and pretensao_salarial > 3000:
+            pontuacao += 1
+
+        escolaridade_minima = vaga.escolaridade_minima
+        candidato_escolaridade = aplicacao.candidato_escolaridade
+
+        ordem_escolaridade = ['fundamental', 'medio', 'tecnologo', 'superior', 'pos', 'doutorado']
+
+        if ordem_escolaridade.index(candidato_escolaridade) >= ordem_escolaridade.index(escolaridade_minima):
+            pontuacao += 1
+
+        return pontuacao
+    
+    @action(detail=False, methods=['get'], url_path="retorna_aplicacoes_empresa", url_name="retorna_aplicacoes_empresa")
+    def retorna_aplicacoes_empresa(self, request):
+        usuario_id = request.query_params.get('usuario_id')
+        try:
+            usuario = Usuario.objects.get(id=usuario_id)
+        except Usuario.DoesNotExist:
+            return Response({"detail": "Candidato não encontrado"}, status=status.HTTP_404_NOT_FOUND)
+        
+        aplicacoes_empresa = self.queryset.filter(vaga__empresa=usuario)
+
+        vagas_com_aplicacoes = {}
+
+        for aplicacao in aplicacoes_empresa:
+            vaga = aplicacao.vaga
+            
+            if vaga.nome_vaga not in vagas_com_aplicacoes:
+                vagas_com_aplicacoes[vaga.nome_vaga] = []
+
+            pontuacao = self.calcular_pontuacao(vaga, aplicacao)
+
+            vagas_com_aplicacoes[vaga.nome_vaga].append({
+                "aplicacao_id": aplicacao.id,
+                "candidato": aplicacao.candidato.username,
+                "data_aplicacao": aplicacao.data_aplicacao,
+                "pretensao_salarial_informada": aplicacao.pretensao_salarial,
+                "candidato_escolaridade": aplicacao.candidato_escolaridade,
+                "pontuacao": pontuacao  
+            })
+
+        return Response(vagas_com_aplicacoes, status=status.HTTP_200_OK)

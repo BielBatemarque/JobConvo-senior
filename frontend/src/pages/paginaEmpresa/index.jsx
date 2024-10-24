@@ -7,7 +7,7 @@ export const PaginaDaEmpresa = () => {
         <>
             <NavBar>
             <NavItem text="Vagas" redirecionamento={'/empresa/vagas'} />
-                <NavItem text="Candidaturas" redirecionamento={'/empresa/candidaturas'} />
+                <NavItem text="Aplicações" redirecionamento={'/empresa/candidaturas'} />
                 <NavItem text="Gráficos" redirecionamento={'/empresa/graficos'} />
             </NavBar>
 

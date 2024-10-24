@@ -73,7 +73,7 @@ export const Candidaturas = () => {
                     </FundoFormListagem>
                 ))
             ) : (
-                <p>Nenhuma aplicação encontrada.</p>
+                null
             )}
         </>
 
